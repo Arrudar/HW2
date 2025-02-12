@@ -176,6 +176,14 @@ puts "Movies"
 puts "======"
 puts ""
 
+
+#movies_list = Movie.where(*)
+
+#or movie in movies_list
+#    puts "#{movie.title} (#{movie.year_released}) - #{movie.studio.name}"
+#end
+
+
 # Query the movies data and loop through the results to display the movies output.
 # TODO!
 
