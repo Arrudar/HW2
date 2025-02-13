@@ -80,6 +80,7 @@ Studio.destroy_all
 Movie.destroy_all
 Actor.destroy_all
 Role.destroy_all
+
 Rails.logger.info "------------------------"
 Rails.logger.info "----- FRESH START! -----"
 Rails.logger.info "------------------------"
@@ -95,82 +96,79 @@ new_studio = Studio.new
 new_studio["name"] = "Warner Bros"
 new_studio.save
 #
-warner = Studio.find_by({ "name" => "Warner Bros" })
+warner_bros = Studio.create(name: "Warner Bros")
 
-new_movie = Movie.new
-new_movie["title"] = "Batman Begins"
-new_movie["year_released"] = 2005
-new_movie["rated"] = "PG-13"
-new_movie["studio_id"] = warner["id"]
-new_movie.save
+batman_begins = warner_bros.movies.create(title: "Batman Begins", year_released: 2005, rated: "PG-13")
+dark_knight = warner_bros.movies.create(title: "The Dark Knight", year_released: 2008, rated: "PG-13")
+dark_knight_rises = warner_bros.movies.create(title: "The Dark Knight Rises", year_released: 2012, rated: "PG-13")
 
-new_movie = Movie.new
-new_movie["title"] = "The Dark Knight"
-new_movie["year_released"] = 2008
-new_movie["rated"] = "PG-13"
-new_movie["studio_id"] = warner["id"]
-new_movie.save
-
-new_movie = Movie.new
-new_movie["title"] = "The Dark Knight Rises"
-new_movie["year_released"] = 2012
-new_movie["rated"] = "PG-13"
-new_movie["studio_id"] = warner["id"]
-new_movie.save
 #
-new_actor = Actor.new
-new_actor["name"] = "Christian Bale"
-new_actor.save
-
-new_actor = Actor.new
-new_actor["name"] = "Michael Caine"
-new_actor.save
-
-new_actor = Actor.new
-new_actor["name"] = "Liam Neeson"
-new_actor.save
-
-new_actor = Actor.new
-new_actor["name"] = "Katie Holmes"
-new_actor.save
-
-new_actor = Actor.new
-new_actor["name"] = "Gary Oldman"
-new_actor.save
+christian_bale = Actor.create(name: "Christian Bale")
+michael_caine = Actor.create(name: "Michael Caine")
+liam_neeson = Actor.create(name: "Liam Neeson")
+katie_holmes = Actor.create(name: "Katie Holmes")
+gary_oldman = Actor.create(name: "Gary Oldman")
+heath_ledger = Actor.create(name: "Heath Ledger")
+aaron_eckhart = Actor.create(name: "Aaron Eckhart")
+maggie_gyllenhaal = Actor.create(name: "Maggie Gyllenhaal")
+tom_hardy = Actor.create(name: "Tom Hardy")
+joseph_gordon_levitt = Actor.create(name: "Joseph Gordon-Levitt")
+anne_hathaway = Actor.create(name: "Anne Hathaway")
 
 #
 #batman = Movie.find_by({ "title" => "Batman Begins" })
 #christian = Actor.find_by({ "name" => "Christian Bale" })
 
-new_role = Role.new
-new_role["movie_id"] = 1
-new_role["actor_id"] = 1
-new_role["character_name"] = "Bruce Wayne"
-new_role.save
+# Add roles dynamically using associations.
+batman_begins.roles.create(actor: christian_bale, character_name: "Bruce Wayne")
+batman_begins.roles.create(actor: michael_caine, character_name: "Alfred")
+batman_begins.roles.create(actor: liam_neeson, character_name: "Ra's Al Ghul")
+batman_begins.roles.create(actor: katie_holmes, character_name: "Rachel Dawes")
+batman_begins.roles.create(actor: gary_oldman, character_name: "Commissioner Gordon")
 
-new_role = Role.new
-new_role["movie_id"] = 1
-new_role["actor_id"] = 2
-new_role["character_name"] = "Alfred"
-new_role.save
+# Add roles for The Dark Knight
+dark_knight.roles.create(actor: christian_bale, character_name: "Bruce Wayne")
+dark_knight.roles.create(actor: heath_ledger, character_name: "Joker")
+dark_knight.roles.create(actor: aaron_eckhart, character_name: "Harvey Dent")
+dark_knight.roles.create(actor: michael_caine, character_name: "Alfred")
+dark_knight.roles.create(actor: maggie_gyllenhaal, character_name: "Rachel Dawes")
 
-new_role = Role.new
-new_role["movie_id"] = 1
-new_role["actor_id"] = 3
-new_role["character_name"] = "Ra's Al Ghul"
-new_role.save
+# Add roles for The Dark Knight Rises
+dark_knight_rises.roles.create(actor: christian_bale, character_name: "Bruce Wayne")
+dark_knight_rises.roles.create(actor: gary_oldman, character_name: "Commissioner Gordon")
+dark_knight_rises.roles.create(actor: tom_hardy, character_name: "Bane")
+dark_knight_rises.roles.create(actor: joseph_gordon_levitt, character_name: "John Blake")
+dark_knight_rises.roles.create(actor: anne_hathaway, character_name: "Selina Kyle")
 
-new_role = Role.new
-new_role["movie_id"] = 1
-new_role["actor_id"] = 4
-new_role["character_name"] = "Rachel Dawes"
-new_role.save
+#new_role = Role.new
+#new_role["movie_id"] = 1
+#new_role["actor_id"] = 1
+#new_role["character_name"] = "Bruce Wayne"
+#new_role.save
 
-new_role = Role.new
-new_role["movie_id"] = 1
-new_role["actor_id"] = 5
-new_role["character_name"] = "Commissioner Gordon"
-new_role.save
+#new_role = Role.new
+#new_role["movie_id"] = 1
+#new_role["actor_id"] = 2
+#new_role["character_name"] = "Alfred"
+#new_role.save
+
+#new_role = Role.new
+#new_role["movie_id"] = 1
+#new_role["actor_id"] = 3
+#new_role["character_name"] = "Ra's Al Ghul"
+#new_role.save
+
+#new_role = Role.new
+#new_role["movie_id"] = 1
+#new_role["actor_id"] = 4
+#new_role["character_name"] = "Rachel Dawes"
+#new_role.save
+
+#new_role = Role.new
+#new_role["movie_id"] = 1
+#new_role["actor_id"] = 5
+#new_role["character_name"] = "Commissioner Gordon"
+#new_role.save
 
 puts "Studios: #{Studio.all.count}" 
 puts "Movies: #{Movie.all.count}" 
