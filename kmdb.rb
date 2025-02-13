@@ -95,6 +95,29 @@ new_studio = Studio.new
 new_studio["name"] = "Warner Bros"
 new_studio.save
 #
+warner = Studio.find_by({ "name" => "Warner Bros" })
+
+new_movie = Movie.new
+new_movie["title"] = "Batman Begins"
+new_movie["year_released"] = 2005
+new_movie["rated"] = "PG-13"
+new_movie["studio_id"] = warner["id"]
+new_movie.save
+
+new_movie = Movie.new
+new_movie["title"] = "The Dark Knight"
+new_movie["year_released"] = 2008
+new_movie["rated"] = "PG-13"
+new_movie["studio_id"] = warner["id"]
+new_movie.save
+
+new_movie = Movie.new
+new_movie["title"] = "The Dark Knight Rises"
+new_movie["year_released"] = 2012
+new_movie["rated"] = "PG-13"
+new_movie["studio_id"] = warner["id"]
+new_movie.save
+#
 new_actor = Actor.new
 new_actor["name"] = "Christian Bale"
 new_actor.save
@@ -114,28 +137,11 @@ new_actor.save
 new_actor = Actor.new
 new_actor["name"] = "Gary Oldman"
 new_actor.save
-#
-new_movie = Movie.new
-new_movie["title"] = "Batman Begins"
-new_movie["year_released"] = 2005
-new_movie["rated"] = "PG-13"
-new_movie["studio_id"] = 1
-new_movie.save
 
-new_movie = Movie.new
-new_movie["title"] = "The Dark Knight"
-new_movie["year_released"] = 2008
-new_movie["rated"] = "PG-13"
-new_movie["studio_id"] = 1
-new_movie.save
-
-new_movie = Movie.new
-new_movie["title"] = "The Dark Knight Rises"
-new_movie["year_released"] = 2012
-new_movie["rated"] = "PG-13"
-new_movie["studio_id"] = 1
-new_movie.save
 #
+#batman = Movie.find_by({ "title" => "Batman Begins" })
+#christian = Actor.find_by({ "name" => "Christian Bale" })
+
 new_role = Role.new
 new_role["movie_id"] = 1
 new_role["actor_id"] = 1
@@ -172,20 +178,36 @@ puts "Roles: #{Role.all.count}"
 puts "Actors: #{Actor.all.count}" 
 
 # Prints a header for the movies output
+puts ""
+puts ""
 puts "Movies"
 puts "======"
 puts ""
 
 
-#movies_list = Movie.where(*)
-
-#or movie in movies_list
-#    puts "#{movie.title} (#{movie.year_released}) - #{movie.studio.name}"
-#end
-
-
 # Query the movies data and loop through the results to display the movies output.
 # TODO!
+
+# Query all movies
+movies = Movie.includes(:studio)
+
+# Loop through each movie and display its details
+for movie in movies
+  # Read each movie's attributes
+  title = movie.title
+  year_released = movie.year_released
+  rated = movie.rated
+  studio_name = movie.studio&.name || "[Studio Missing]" # Handle missing studios
+
+  # Display the movie details
+  puts "#{title.ljust(25)} #{year_released} #{rated.ljust(10)} #{studio_name}"
+end
+
+puts ""
+
+movies.each do |movie|
+    puts "Movie: #{movie.title}, Studio ID: #{movie.studio_id}, Studio Name: #{movie.studio&.name || 'None'}"
+  end
 
 # Prints a header for the cast output
 puts ""
@@ -195,3 +217,28 @@ puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
 # TODO!
+
+
+# Query all movies with their roles and actors preloaded
+movies = Movie.includes(roles: :actor)
+
+# Loop through each movie and display its cast
+for movie in movies
+  # Safeguard for missing movies (shouldn't happen if data is correct)
+  if movie.nil?
+    puts "[Movie Missing]"
+    next # Skip to the next iteration if the movie is missing
+  end
+
+  # Loop through each role in the current movie
+  for role in movie.roles
+    # Safeguard for missing actors or character names gracefully
+    actor_name = role.actor&.name || "[Actor Missing]"
+    character_name = role.character_name || "[Character Missing]"
+
+    # Display the cast details for this role in the current movie
+    puts "#{movie.title.ljust(25)} #{actor_name.ljust(20)} #{character_name}"
+  end
+
+  # Add spacing between movies for readability (optional)
+end
